@@ -1,12 +1,12 @@
 import sqlite3
 
-# ===== ETAPA 1: CONEXIÓN =====
+# Conexión a la base de datos (se crea el archivo si no existe)
 conn = sqlite3.connect("tienda.db")
 cursor = conn.cursor()
 conn.execute("PRAGMA foreign_keys = ON")
 print("✅ Conexión a tienda.db exitosa")
 
-# ===== ETAPA 2: TABLA PRODUCTOS =====
+# Tabla productos
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS productos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,7 +15,7 @@ cursor.execute("""
     )
 """)
 
-# ===== ETAPA 3: TABLA CLIENTES =====
+# Tabla clientes
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS clientes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +24,7 @@ cursor.execute("""
     )
 """)
 
-# ===== ETAPA 4: TABLA VENTAS (llaves foráneas) =====
+# Tabla ventas (tabla dependiente con llaves foráneas)
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS ventas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +35,8 @@ cursor.execute("""
         FOREIGN KEY (cliente_id) REFERENCES clientes (id)
     )
 """)
-# ===== ETAPA 5: INSERTAR DATOS (solo si está vacío) =====
+
+# Insertar datos de prueba (solo si la tabla está vacía)
 cursor.execute("SELECT COUNT(*) FROM productos")
 if cursor.fetchone()[0] == 0:
     cursor.execute("INSERT INTO productos (nombre, precio) VALUES ('Laptop HP', 1500.00)")
@@ -44,9 +45,9 @@ if cursor.fetchone()[0] == 0:
     cursor.execute("INSERT INTO clientes (nombre, telefono) VALUES ('Maria Lopez', '666-98765')")
     cursor.execute("INSERT INTO ventas (fecha, producto_id, cliente_id) VALUES ('2026-09-29', 1, 1)")
     cursor.execute("INSERT INTO ventas (fecha, producto_id, cliente_id) VALUES ('2026-09-29', 2, 1)")
-conn.commit()  # imprescindible en INSERT/UPDATE/DELETE
+conn.commit()  # necesario en INSERT/UPDATE/DELETE
 
-# ===== ETAPA 6: MOSTRAR DATOS =====
+# Consultas de selección
 print("\nPRODUCTOS")
 cursor.execute("SELECT * FROM productos")
 for fila in cursor:
@@ -62,6 +63,7 @@ cursor.execute("SELECT * FROM ventas")
 for fila in cursor:
     print(fila)
 
-# ===== CIERRE =====
+# Cerrar cursor y conexión
 cursor.close()
 conn.close()
+print("\n✅ Cursor y conexión cerrados correctamente")
