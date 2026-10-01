@@ -46,6 +46,22 @@ if cursor.fetchone()[0] == 0:
     cursor.execute("INSERT INTO ventas (fecha, producto_id, cliente_id) VALUES ('2026-09-29', 2, 1)")
 conn.commit()  # imprescindible en INSERT/UPDATE/DELETE
 
+# ===== ETAPA 6: MOSTRAR DATOS =====
+print("\nPRODUCTOS")
+cursor.execute("SELECT * FROM productos")
+for fila in cursor:
+    print(fila)
+
+print("\nCLIENTES")
+cursor.execute("SELECT * FROM clientes")
+for fila in cursor:
+    print(fila)
+
+print("\nVENTAS")
+cursor.execute("SELECT * FROM ventas")
+for fila in cursor:
+    print(fila)
+
 # ===== CIERRE =====
 cursor.close()
 conn.close()
